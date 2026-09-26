@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إدارة الطلبات — إدارة VoltStore</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+</head>
+<body class="admin-body">
+
+  <div id="admin-sidebar-root"></div>
+
+  <div class="admin-main">
+    <div id="admin-header-root"></div>
+
+    <main class="admin-content" style="padding: 28px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+        <div style="display:flex; gap:12px; align-items:center; flex:1; max-width:550px;">
+          <input type="search" id="admin-orders-search" class="form-control" placeholder="بحث برقم الطلب، اسم العميل، المدينة..." />
+          <select id="admin-orders-status" class="form-control" style="width:180px;">
+            <option value="all">جميع الحالات</option>
+            <option value="pending">قيد الانتظار</option>
+            <option value="processing">جاري المعالجة</option>
+            <option value="shipped">تم الشحن</option>
+            <option value="delivered">تم التسليم</option>
+            <option value="cancelled">ملغي</option>
+          </select>
+        </div>
+
+        <div style="font-size:0.88rem; color:var(--text-muted);" id="orders-summary-stat"></div>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="overflow-x:auto;">
+          <table class="orders-table" aria-label="جدول الطلبات الإداري">
+            <thead>
+              <tr>
+                <th>رقم الطلب</th>
+                <th>التاريخ</th>
+                <th>العميل</th>
+                <th>رقم التواصل</th>
+                <th>المدينة</th>
+                <th>الإجمالي</th>
+                <th>حالة الطلب</th>
+                <th style="text-align:center;">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-tbody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Admin Order Details & Status Modal -->
+  <div id="admin-order-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal" style="max-width:600px;">
+      <div class="modal-header">
+        <h3 id="admin-modal-title">تفاصيل وتحديث الطلب</h3>
+        <button class="modal-close" onclick="closeAdminOrderModal()">&times;</button>
+      </div>
+      <div id="admin-modal-content"></div>
+    </div>
+  </div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminPage('orders', 'إدارة ومتابعة طلبات العملاء');
+      renderAdminOrders();
+
+      document.getElementById('admin-orders-search').addEventListener('input', renderAdminOrders);
+      document.getElementById('admin-orders-status').addEventListener('change', renderAdminOrders);
+    });
+
+    function getOrdersData() {
+      return getStoredOrders();
+    }
+
+    function saveUpdatedOrder(orderId, newStatus) {
+      // Check customer_orders
+      try {
+        let stored = JSON.parse(localStorage.getItem('customer_orders') || '[]');
+        let order = stored.find(o => o.id === orderId);
+        if (order) {
+          order.status = newStatus;
+          localStorage.setItem('customer_orders', JSON.stringify(stored));
+        } else {
+          // If in demo orders, clone it into stored customer_orders with new status
+          const demo = DEMO_ORDERS.find(o => o.id === orderId);
+          if (demo) {
+            const updatedDemo = { ...demo, status: newStatus };
+            stored.unshift(updatedDemo);
+            localStorage.setItem('customer_orders', JSON.stringify(stored));
+          }
+        }
+        showToast('تم تحديث حالة الطلب بنجاح ✓', 'success');
+        renderAdminOrders();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderAdminOrders() {
+      const orders = getOrdersData();
+      const search = (document.getElementById('admin-orders-search').value || '').trim().toLowerCase();
+      const status = document.getElementById('admin-orders-status').value;
+
+      let filtered = orders;
+      if (search) {
+        filtered = filtered.filter(o => 
+          o.id.toLowerCase().includes(search) ||
+          o.customer.toLowerCase().includes(search) ||
+          (o.city && o.city.toLowerCase().includes(search)) ||
+          (o.phone && o.phone.includes(search))
+        );
+      }
+      if (status && status !== 'all') {
+        filtered = filtered.filter(o => o.status === status);
+      }
+
+      document.getElementById('orders-summary-stat').textContent = `إجمالي المعروض: ${filtered.length} طلب`;
+
+      const tbody = document.getElementById('admin-orders-tbody');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">لا توجد طلبات مطابقة.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(o => `
+        <tr>
+          <td><strong style="color:var(--secondary);">${o.id}</strong></td>
+          <td>${o.date}</td>
+          <td><strong>${o.customer}</strong></td>
+          <td dir="ltr" style="text-align:right;">${o.phone || '—'}</td>
+          <td>${o.city || '—'}</td>
+          <td><strong>${formatPrice(o.total)}</strong></td>
+          <td>
+            <select class="form-control" style="padding:4px 8px; font-size:0.82rem; height:auto; width:auto; border-radius:4px;" onchange="saveUpdatedOrder('${o.id}', this.value)">
+              <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>قيد الانتظار</option>
+              <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>جاري المعالجة</option>
+              <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>تم الشحن</option>
+              <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>تم التسليم</option>
+              <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>ملغي</option>
+            </select>
+          </td>
+          <td style="text-align:center;">
+            <button class="btn btn-outline btn-sm" onclick="viewOrderModal('${o.id}')">
+              ${icon('eye')} معاينة
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function viewOrderModal(orderId) {
+      const orders = getOrdersData();
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const products = getStoredProducts();
+      const content = document.getElementById('admin-modal-content');
+      document.getElementById('admin-modal-title').textContent = `تفاصيل الطلب: ${order.id}`;
+
+      const itemsHTML = (order.items || []).map(i => {
+        const prod = products.find(p => p.id === i.productId);
+        const name = prod ? prod.name : (i.name || `منتج #${i.productId}`);
+        const img = prod ? prod.image : 'https://placehold.co/100x100?text=Product';
+        const price = i.price || (prod ? prod.price : 0);
+        return `
+          <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--border);">
+            <img src="${img}" alt="${name}" style="width:40px; height:40px; object-fit:cover; border-radius:var(--radius-sm);" />
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:0.85rem;">${name}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${i.qty || 1} × ${formatPrice(price)}</div>
+            </div>
+            <div style="font-weight:700; color:var(--primary); font-size:0.9rem;">${formatPrice(price * (i.qty || 1))}</div>
+          </div>
+        `;
+      }).join('');
+
+      content.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:var(--surface); padding:14px; border-radius:var(--radius-sm); margin-bottom:16px; font-size:0.88rem;">
+          <div><strong>العميل:</strong> ${order.customer}</div>
+          <div><strong>الجوال:</strong> ${order.phone}</div>
+          <div><strong>البريد:</strong> ${order.email || '—'}</div>
+          <div><strong>المدينة:</strong> ${order.city}</div>
+          <div style="grid-column:1/-1;"><strong>العنوان:</strong> ${order.address || '—'}</div>
+          <div><strong>طريقة الدفع:</strong> ${order.paymentMethod || 'الدفع عند الاستلام'}</div>
+          <div><strong>الإجمالي:</strong> <strong style="color:var(--primary);">${formatPrice(order.total)}</strong></div>
+        </div>
+
+        <h4 style="margin-bottom:8px; font-size:0.9rem;">المنتجات المطلوبة</h4>
+        <div style="max-height:200px; overflow-y:auto; margin-bottom:20px;">
+          ${itemsHTML}
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline btn-sm" onclick="closeAdminOrderModal()">إغلاق</button>
+        </div>
+      `;
+
+      document.getElementById('admin-order-modal').classList.remove('hidden');
+    }
+
+    function closeAdminOrderModal() {
+      document.getElementById('admin-order-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

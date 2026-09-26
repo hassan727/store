@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة التحكم — إدارة VoltStore</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+</head>
+<body class="admin-body">
+
+  <div id="admin-sidebar-root"></div>
+
+  <div class="admin-main">
+    <div id="admin-header-root"></div>
+
+    <main class="admin-content" style="padding: 28px;">
+      <!-- KPI Stats Grid -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-bottom:28px;" id="admin-stats-grid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px; align-items:start;">
+        <!-- Recent Orders -->
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div style="padding:20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border);">
+            <h3 style="margin:0; font-size:1.05rem;">أحدث الطلبات</h3>
+            <a href="orders.html" class="btn btn-outline btn-sm">جميع الطلبات</a>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="orders-table" aria-label="أحدث الطلبات">
+              <thead>
+                <tr>
+                  <th>رقم الطلب</th>
+                  <th>العميل</th>
+                  <th>الإجمالي</th>
+                  <th>الحالة</th>
+                  <th>التاريخ</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-tbody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Low Stock Alerts -->
+        <div class="card" style="padding:20px;">
+          <h3 style="margin-bottom:16px; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+            ${icon('package')} تنبيهات المخزون
+          </h3>
+          <div id="low-stock-list" style="display:flex; flex-direction:column; gap:12px;">
+            <!-- Rendered by JS -->
+          </div>
+          <a href="products.html" class="btn btn-outline btn-full btn-sm" style="margin-top:16px;">إدارة كل المنتجات</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminPage('dashboard', 'لوحة التحكم والتقارير');
+      renderDashboardData();
+    });
+
+    function renderDashboardData() {
+      const products = getStoredProducts();
+      const orders = getStoredOrders();
+      const customers = DEMO_CUSTOMERS;
+
+      const totalSales = orders.reduce((sum, o) => sum + (o.status !== 'cancelled' ? o.total : 0), 0);
+
+      // Render stats
+      const statsGrid = document.getElementById('admin-stats-grid');
+      if (statsGrid) {
+        statsGrid.innerHTML = `
+          <div class="card" style="padding:20px; display:flex; align-items:center; gap:16px;">
+            <div style="width:48px; height:48px; border-radius:var(--radius-md); background:var(--info-bg); color:var(--secondary); display:flex; align-items:center; justify-content:center;">
+              ${icon('tag')}
+            </div>
+            <div>
+              <div style="font-size:0.82rem; color:var(--text-muted);">إجمالي المبيعات</div>
+              <strong style="font-size:1.4rem; color:var(--primary);">${formatPrice(totalSales)}</strong>
+            </div>
+          </div>
+
+          <div class="card" style="padding:20px; display:flex; align-items:center; gap:16px;">
+            <div style="width:48px; height:48px; border-radius:var(--radius-md); background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center;">
+              ${icon('orders')}
+            </div>
+            <div>
+              <div style="font-size:0.82rem; color:var(--text-muted);">عدد الطلبات</div>
+              <strong style="font-size:1.4rem;">${orders.length}</strong>
+            </div>
+          </div>
+
+          <div class="card" style="padding:20px; display:flex; align-items:center; gap:16px;">
+            <div style="width:48px; height:48px; border-radius:var(--radius-md); background:#dcfce7; color:var(--success); display:flex; align-items:center; justify-content:center;">
+              ${icon('package')}
+            </div>
+            <div>
+              <div style="font-size:0.82rem; color:var(--text-muted);">المنتجات في المتجر</div>
+              <strong style="font-size:1.4rem;">${products.length}</strong>
+            </div>
+          </div>
+
+          <div class="card" style="padding:20px; display:flex; align-items:center; gap:16px;">
+            <div style="width:48px; height:48px; border-radius:var(--radius-md); background:#fef3c7; color:#d97706; display:flex; align-items:center; justify-content:center;">
+              ${icon('users')}
+            </div>
+            <div>
+              <div style="font-size:0.82rem; color:var(--text-muted);">إجمالي العملاء</div>
+              <strong style="font-size:1.4rem;">${customers.length}</strong>
+            </div>
+          </div>
+        `;
+      }
+
+      // Recent orders
+      const recentTbody = document.getElementById('recent-orders-tbody');
+      if (recentTbody) {
+        recentTbody.innerHTML = orders.slice(0, 5).map(o => `
+          <tr>
+            <td><strong>${o.id}</strong></td>
+            <td>${o.customer}</td>
+            <td><strong>${formatPrice(o.total)}</strong></td>
+            <td>${getAdminStatusBadge(o.status)}</td>
+            <td>${o.date}</td>
+          </tr>
+        `).join('');
+      }
+
+      // Low stock products
+      const lowStockList = document.getElementById('low-stock-list');
+      if (lowStockList) {
+        const lowStock = products.filter(p => !p.inStock || p.stockQty <= 10).slice(0, 4);
+        if (lowStock.length === 0) {
+          lowStockList.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">المخزون متوفر لجميع المنتجات.</p>';
+        } else {
+          lowStockList.innerHTML = lowStock.map(p => `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <img src="${p.image}" alt="${p.name}" style="width:36px; height:36px; object-fit:cover; border-radius:var(--radius-sm);" />
+                <div>
+                  <div style="font-weight:600; font-size:0.85rem; max-width:140px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</div>
+                  <small style="color:var(--text-muted);">${p.brand}</small>
+                </div>
+              </div>
+              <span class="badge ${p.stockQty === 0 ? 'badge-error' : 'badge-warning'}">
+                ${p.stockQty === 0 ? 'نفذ المخزون' : `${p.stockQty} متبقي`}
+              </span>
+            </div>
+          `).join('');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

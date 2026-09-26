@@ -1,0 +1,108 @@
+Filename: fridge-01.jpg
+Product: Samsung Refrigerator RF60J9030WZ
+Brand: Samsung
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/SAMSUNG_REFRIGERATOR_RF60J9030WZ.jpg/960px-SAMSUNG_REFRIGERATOR_RF60J9030WZ.jpg
+------------------------
+Filename: fridge-02.jpg
+Product: Panasonic Refrigerator NR-C320WP-N
+Brand: Panasonic
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Panasonic_HOME_REFRIGERATOR_NR-C320WP-N.jpg/960px-Panasonic_HOME_REFRIGERATOR_NR-C320WP-N.jpg
+------------------------
+Filename: fridge-03.jpg
+Product: Liebherr Comfort No-Frost Refrigerator
+Brand: Liebherr
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Refrigerator_Liebherr_Comfort.jpg/960px-Refrigerator_Liebherr_Comfort.jpg
+------------------------
+Filename: washer-01.jpg
+Product: Panasonic Front-Load Washing Machine
+Brand: Panasonic
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/Panasonic_front-load_washing_machine.jpg/960px-Panasonic_front-load_washing_machine.jpg
+------------------------
+Filename: washer-02.jpg
+Product: Beko Washing Machine
+Brand: Beko
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Washing_Machine_Beko.jpg/960px-Washing_Machine_Beko.jpg
+------------------------
+Filename: washer-03.jpg
+Product: Fagor Washing Machine FF6314
+Brand: Fagor
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Fagor_washing_machine_front_FF6314.jpg/960px-Fagor_washing_machine_front_FF6314.jpg
+------------------------
+Filename: tv-01.jpg
+Product: Samsung Smart 4K TV
+Brand: Samsung
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/SamsungSmartTV.JPG/960px-SamsungSmartTV.JPG
+------------------------
+Filename: tv-02.jpg
+Product: LG 55 Inch OLED 4K Smart TV
+Brand: LG
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/LG%EC%A0%84%EC%9E%90%2C_%EA%B9%9C%EB%B9%A1%EC%9E%84_%EC%97%86%EB%8A%94_55%EC%9D%B8%EC%B9%98_3D_OLED_TV_%EA%B3%B5%EA%B0%9C.jpg/960px-LG%EC%A0%84%EC%9E%90%2C_%EA%B9%9C%EB%B9%A1%EC%9E%84_%EC%97%86%EB%8A%94_55%EC%9D%B8%EC%B9%98_3D_OLED_TV_%EA%B3%B5%EA%B0%9C.jpg
+------------------------
+Filename: ac-01.jpg
+Product: Panasonic Split AC Indoor Unit CS-C10KJ2
+Brand: Panasonic
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/Panasonic_AIR_CONDITIONER_INDOOR_UNIT_CS-C10KJ2_%282%29.jpg/960px-Panasonic_AIR_CONDITIONER_INDOOR_UNIT_CS-C10KJ2_%282%29.jpg
+------------------------
+Filename: ac-02.jpg
+Product: Hyundai Mini Split AC BMS-12HD
+Brand: Hyundai
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/HYUNDAI_-_Air_conditioner_mini_split_%28model_BMS-12HD%29.jpg/960px-HYUNDAI_-_Air_conditioner_mini_split_%28model_BMS-12HD%29.jpg
+------------------------
+Filename: microwave-01.jpg
+Product: Panasonic Microwave Oven NN-GM333W
+Brand: Panasonic
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Panasonic_MICROWAVE_OVEN_NN-GM333W.jpg/960px-Panasonic_MICROWAVE_OVEN_NN-GM333W.jpg
+------------------------
+Filename: microwave-02.jpg
+Product: Toshiba Microwave Oven ER-J3
+Brand: Toshiba
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/TOSHIBA_Microwave_Oven_ER-J3_.jpg/960px-TOSHIBA_Microwave_Oven_ER-J3_.jpg
+------------------------
+Filename: cooker-01.jpg
+Product: Modern Stainless Gas Stove Cooker
+Brand: Fresh
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Gas_stove_13.jpg/960px-Gas_stove_13.jpg
+------------------------
+Filename: cooker-02.jpg
+Product: Whirlpool Gold Built-in Electric Oven
+Brand: Whirlpool
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Whirlpool_Gold_built-in_ovens.jpg/960px-Whirlpool_Gold_built-in_ovens.jpg
+------------------------
+Filename: dishwasher-01.jpg
+Product: Bosch Dishwasher Inox Serie 6
+Brand: Bosch
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Bosch_Dishwasher_2026-08-23_1.jpg/960px-Bosch_Dishwasher_2026-08-23_1.jpg
+------------------------
+Filename: small-01.jpg
+Product: Ninja Foodi MAX Health Grill and Air Fryer
+Brand: Ninja
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Ninja_Foodi_MAX_Health_Grill_%26_Air_Fryer_AG551EU.jpg/960px-Ninja_Foodi_MAX_Health_Grill_%26_Air_Fryer_AG551EU.jpg
+------------------------
+Filename: small-02.jpg
+Product: True HEPA Cyclone Vacuum Cleaner
+Brand: Tornado
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/True_Hepa_Vacuum_Cleaner.jpg/960px-True_Hepa_Vacuum_Cleaner.jpg
+------------------------
+Filename: small-03.jpg
+Product: Bosch Electric Kettle Stainless Steel
+Brand: Bosch
+Source Website: Wikimedia Commons
+Source URL: https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/2023_Czajnik_elektryczny_Bosch_%281%29.jpg/960px-2023_Czajnik_elektryczny_Bosch_%281%29.jpg
+------------------------

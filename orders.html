@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>طلباتي — VoltStore</title>
+  <meta name="description" content="تتبع طلباتك السابقة والحالية في متجر VoltStore للأجهزة الكهربائية." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content">
+
+  <div class="page-title-bar">
+    <div class="container">
+      <h1 data-t="myOrders">طلباتي</h1>
+      <nav class="breadcrumb" aria-label="مسار التنقل">
+        <a href="index.html">الرئيسية</a>
+        <span>/</span>
+        <a href="account.html">حسابي</a>
+        <span>/</span>
+        <span aria-current="page">طلباتي</span>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top: 32px; padding-bottom: 48px;">
+    <!-- Filter status bar -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+      <div style="display:flex; gap:8px; flex-wrap:wrap;" id="order-filters">
+        <button class="btn btn-primary btn-sm filter-status-btn active" data-status="all">جميع الطلبات</button>
+        <button class="btn btn-outline btn-sm filter-status-btn" data-status="pending">قيد الانتظار</button>
+        <button class="btn btn-outline btn-sm filter-status-btn" data-status="processing">جاري المعالجة</button>
+        <button class="btn btn-outline btn-sm filter-status-btn" data-status="shipped">تم الشحن</button>
+        <button class="btn btn-outline btn-sm filter-status-btn" data-status="delivered">تم التسليم</button>
+      </div>
+
+      <div style="font-size:0.88rem; color:var(--text-muted);" id="orders-count-text"></div>
+    </div>
+
+    <!-- Orders list container -->
+    <div id="orders-container">
+      <div class="loading-spinner"><div class="spinner" role="status" aria-label="جاري التحميل..."></div></div>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div id="order-modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-order-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-order-title">تفاصيل الطلب</h3>
+        <button class="modal-close" id="modal-close-btn" aria-label="إغلاق">&times;</button>
+      </div>
+      <div id="modal-order-body"></div>
+    </div>
+  </div>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initPage('account');
+  renderOrdersList('all');
+
+  // Filter buttons click
+  document.querySelectorAll('.filter-status-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-status-btn').forEach(b => {
+        b.classList.remove('btn-primary', 'active');
+        b.classList.add('btn-outline');
+      });
+      btn.classList.add('btn-primary', 'active');
+      btn.classList.remove('btn-outline');
+      renderOrdersList(btn.dataset.status);
+    });
+  });
+
+  // Modal close
+  const overlay = document.getElementById('order-modal-overlay');
+  const closeBtn = document.getElementById('modal-close-btn');
+  if (closeBtn) closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
+  if (overlay) overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.classList.add('hidden');
+  });
+
+  // Check URL query for order id
+  const targetId = getParam('id');
+  if (targetId) {
+    setTimeout(() => openOrderDetails(targetId), 200);
+  }
+});
+
+function getStatusBadge(status) {
+  const map = {
+    delivered: { cls: 'badge-success', label: 'تم التسليم' },
+    shipped:   { cls: 'badge-info',    label: 'تم الشحن' },
+    processing:{ cls: 'badge-primary', label: 'جاري المعالجة' },
+    pending:   { cls: 'badge-warning', label: 'قيد الانتظار' },
+    cancelled: { cls: 'badge-error',   label: 'ملغي' },
+  };
+  const item = map[status] || { cls: 'badge-muted', label: status };
+  return `<span class="badge ${item.cls}">${item.label}</span>`;
+}
+
+function renderOrdersList(statusFilter = 'all') {
+  const allOrders = getStoredOrders();
+  const filtered = statusFilter === 'all' 
+    ? allOrders 
+    : allOrders.filter(o => o.status === statusFilter);
+
+  const countEl = document.getElementById('orders-count-text');
+  if (countEl) countEl.textContent = `عرض ${filtered.length} طلب`;
+
+  const container = document.getElementById('orders-container');
+  if (!container) return;
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="card" style="text-align:center; padding:48px 20px;">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="80" height="80">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <h3>لا توجد طلبات تطابق هذا التصنيف</h3>
+          <p>لم يتم العثور على أي طلبات مسجلة.</p>
+          <a href="products.html" class="btn btn-primary" style="margin-top:12px;">تسوق الآن</a>
+        </div>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="card" style="padding:0; overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table class="orders-table" aria-label="قائمة الطلبات">
+          <thead>
+            <tr>
+              <th>رقم الطلب</th>
+              <th>التاريخ</th>
+              <th>العميل</th>
+              <th>المدينة</th>
+              <th>عدد العناصر</th>
+              <th>الإجمالي</th>
+              <th>الحالة</th>
+              <th>التفاصيل</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.map(order => `
+              <tr>
+                <td><strong style="color:var(--secondary);">${order.id}</strong></td>
+                <td>${order.date}</td>
+                <td>${order.customer}</td>
+                <td>${order.city}</td>
+                <td>${(order.items || []).reduce((acc, cur) => acc + (cur.qty || 1), 0)} قطعة</td>
+                <td><strong>${formatPrice(order.total)}</strong></td>
+                <td>${getStatusBadge(order.status)}</td>
+                <td>
+                  <button class="btn btn-outline btn-sm" onclick="openOrderDetails('${order.id}')">
+                    عرض التفاصيل
+                  </button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function openOrderDetails(orderId) {
+  const allOrders = getStoredOrders();
+  const order = allOrders.find(o => o.id === orderId);
+  if (!order) return;
+
+  const modalBody = document.getElementById('modal-order-body');
+  const title = document.getElementById('modal-order-title');
+  if (title) title.textContent = `تفاصيل الطلب: ${order.id}`;
+
+  const products = getStoredProducts();
+
+  const itemsHTML = (order.items || []).map(i => {
+    const prod = products.find(p => p.id === i.productId);
+    const name = prod ? prod.name : (i.name || `منتج #${i.productId}`);
+    const img = prod ? prod.image : 'https://placehold.co/100x100?text=Product';
+    const price = i.price || (prod ? prod.price : 0);
+    return `
+      <div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);">
+        <img src="${img}" alt="${name}" style="width:50px; height:50px; object-fit:cover; border-radius:var(--radius-sm);" />
+        <div style="flex:1;">
+          <div style="font-weight:600; font-size:0.9rem;">${name}</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">الكمية: ${i.qty || 1} × ${formatPrice(price)}</div>
+        </div>
+        <div style="font-weight:700; color:var(--primary);">${formatPrice(price * (i.qty || 1))}</div>
+      </div>`;
+  }).join('');
+
+  modalBody.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+      <div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">حالة الطلب</div>
+        <div style="margin-top:4px;">${getStatusBadge(order.status)}</div>
+      </div>
+      <div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">تاريخ الطلب</div>
+        <strong>${order.date}</strong>
+      </div>
+      <div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">إجمالي الطلب</div>
+        <strong style="color:var(--primary); font-size:1.15rem;">${formatPrice(order.total)}</strong>
+      </div>
+    </div>
+
+    <h4 style="margin-bottom:10px; font-size:0.92rem;">بيانات العميل والتوصيل</h4>
+    <div style="background:var(--surface); border-radius:var(--radius-sm); padding:14px; margin-bottom:16px; font-size:0.88rem; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div><strong>العميل:</strong> ${order.customer}</div>
+      <div><strong>الجوال:</strong> ${order.phone}</div>
+      <div><strong>البريد:</strong> ${order.email || '—'}</div>
+      <div><strong>المدينة:</strong> ${order.city}</div>
+      <div style="grid-column:1/-1;"><strong>العنوان:</strong> ${order.address || '—'}</div>
+      ${order.paymentMethod ? `<div style="grid-column:1/-1;"><strong>طريقة الدفع:</strong> ${order.paymentMethod}</div>` : ''}
+    </div>
+
+    <h4 style="margin-bottom:10px; font-size:0.92rem;">العناصر المطلوبة</h4>
+    <div style="max-height:220px; overflow-y:auto; margin-bottom:16px;">
+      ${itemsHTML}
+    </div>
+
+    <div class="modal-footer" style="padding-top:12px; border-top:1px solid var(--border);">
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('order-modal-overlay').classList.add('hidden')">إغلاق</button>
+    </div>`;
+
+  document.getElementById('order-modal-overlay').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

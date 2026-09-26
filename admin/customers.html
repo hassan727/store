@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>العملاء — إدارة VoltStore</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+</head>
+<body class="admin-body">
+
+  <div id="admin-sidebar-root"></div>
+
+  <div class="admin-main">
+    <div id="admin-header-root"></div>
+
+    <main class="admin-content" style="padding: 28px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+        <div style="display:flex; gap:12px; align-items:center; flex:1; max-width:450px;">
+          <input type="search" id="admin-customer-search" class="form-control" placeholder="بحث باسم العميل، البريد، أو رقم الجوال..." />
+        </div>
+
+        <div style="font-size:0.88rem; color:var(--text-muted);" id="customers-count"></div>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="overflow-x:auto;">
+          <table class="orders-table" aria-label="جدول العملاء">
+            <thead>
+              <tr>
+                <th style="width:60px;">#</th>
+                <th>اسم العميل</th>
+                <th>البريد الإلكتروني</th>
+                <th>رقم الجوال</th>
+                <th>المدينة</th>
+                <th>عدد الطلبات</th>
+                <th>إجمالي المشتريات</th>
+                <th>تاريخ التسجيل</th>
+                <th style="text-align:center;">إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="admin-customers-tbody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Customer View Modal -->
+  <div id="customer-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="cust-modal-title">ملف العميل</h3>
+        <button class="modal-close" onclick="closeCustomerModal()">&times;</button>
+      </div>
+      <div id="cust-modal-content"></div>
+    </div>
+  </div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminPage('customers', 'قائمة العملاء وبياناتهم');
+      renderCustomersTable();
+
+      document.getElementById('admin-customer-search').addEventListener('input', renderCustomersTable);
+    });
+
+    function renderCustomersTable() {
+      const customers = DEMO_CUSTOMERS;
+      const search = (document.getElementById('admin-customer-search').value || '').trim().toLowerCase();
+
+      let filtered = customers;
+      if (search) {
+        filtered = filtered.filter(c => 
+          c.name.toLowerCase().includes(search) ||
+          c.email.toLowerCase().includes(search) ||
+          c.phone.includes(search) ||
+          (c.city && c.city.toLowerCase().includes(search))
+        );
+      }
+
+      document.getElementById('customers-count').textContent = `إجمالي العملاء: ${filtered.length}`;
+
+      const tbody = document.getElementById('admin-customers-tbody');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:32px; color:var(--text-muted);">لا يوجد عملاء مطابقين للبحث.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(c => `
+        <tr>
+          <td><strong>${c.id}</strong></td>
+          <td><strong>${c.name}</strong></td>
+          <td dir="ltr" style="text-align:right;">${c.email}</td>
+          <td dir="ltr" style="text-align:right;">${c.phone}</td>
+          <td>${c.city}</td>
+          <td><span class="badge badge-info">${c.orders} طلبات</span></td>
+          <td><strong style="color:var(--primary);">${formatPrice(c.totalSpent)}</strong></td>
+          <td>${c.joinDate}</td>
+          <td style="text-align:center;">
+            <button class="btn btn-outline btn-sm" onclick="viewCustomerDetails('${c.id}')">
+              ${icon('eye')} ملف العميل
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function viewCustomerDetails(custId) {
+      const c = DEMO_CUSTOMERS.find(cust => cust.id === custId);
+      if (!c) return;
+
+      document.getElementById('cust-modal-title').textContent = `ملف العميل: ${c.name}`;
+      const content = document.getElementById('cust-modal-content');
+
+      content.innerHTML = `
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+          <div style="width:52px; height:52px; border-radius:50%; background:var(--secondary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.3rem;">
+            ${c.name.charAt(0)}
+          </div>
+          <div>
+            <h4 style="margin:0; font-size:1.1rem;">${c.name}</h4>
+            <div style="font-size:0.82rem; color:var(--text-muted);">عضو منذ: ${c.joinDate}</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.9rem; margin-bottom:20px;">
+          <div><strong>البريد:</strong> ${c.email}</div>
+          <div><strong>الجوال:</strong> ${c.phone}</div>
+          <div><strong>المدينة:</strong> ${c.city}</div>
+          <div><strong>الطلبات المكتملة:</strong> ${c.orders}</div>
+          <div style="grid-column:1/-1;"><strong>إجمالي المنفق:</strong> <span style="color:var(--primary); font-weight:700;">${formatPrice(c.totalSpent)}</span></div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline btn-sm" onclick="closeCustomerModal()">إغلاق</button>
+        </div>
+      `;
+
+      document.getElementById('customer-modal').classList.remove('hidden');
+    }
+
+    function closeCustomerModal() {
+      document.getElementById('customer-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
