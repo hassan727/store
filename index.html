@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إلكترو تك | ElectroTech — أكبر متجر للأجهزة الكهربائية والمنزلية في مصر</title>
+  <meta name="description" content="تسوق أفضل الأجهزة الكهربائية والمنزلية في مصر: ثلاجات، غسالات، شاشات، تكييفات، وبوتاجازات بأفضل الأسعار وأقوى العروض مع ضمان الوكيل المعتمد." />
+
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Swiper.js Slider CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <!-- Store Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- Dark Mode CSS -->
+  <style>
+    /* Dark mode toggle button styles */
+    .dark-mode-toggle {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      z-index: 999;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0a3d62 0%, #2563eb 100%);
+      color: white;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .dark-mode-toggle:hover {
+      transform: scale(1.15) rotate(15deg);
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .dark-mode-toggle:active {
+      transform: scale(0.95);
+    }
+    
+    .dark-mode .dark-mode-toggle {
+      background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .dark-mode .dark-mode-toggle:hover {
+      background: linear-gradient(135deg, #475569 0%, #334155 100%);
+      box-shadow: 0 12px 30px rgba(255, 193, 7, 0.3);
+    }
+    
+    /* Icon animation */
+    .dark-mode-toggle i {
+      transition: all 0.5s ease;
+    }
+    
+    .dark-mode-toggle:hover i {
+      transform: rotate(360deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       TOP ANNOUNCEMENT BAR
+       ============================================================ -->
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-notice">
+        <span class="tag">عرض خاص</span>
+        <span>🚚 شحن وتوصيل فوري لكافة محافظات مصر | 🛡️ ضمان الوكيل المعتمد | 💳 إمكانية التقسيط بدون فوائد</span>
+      </div>
+      <div class="top-bar-links">
+        <a href="tel:19875"><i class="fa-solid fa-headset"></i> الخط الساخن: <strong>19875</strong></a>
+        <span>|</span>
+        <span><i class="fa-solid fa-coins"></i> العملة: جنيه مصري (EGP)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MAIN STORE HEADER
+       ============================================================ -->
+  <header class="main-header">
+    <div class="container header-inner">
+      
+      <!-- Store Brand Logo -->
+      <a href="index.html" class="brand-logo" aria-label="الصفحة الرئيسية إلكترو تك">
+        <div class="logo-icon">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <div class="logo-text">
+          <h1>إلكترو تك</h1>
+          <span>ELECTROTECH STORE</span>
+        </div>
+      </a>
+
+      <!-- Prominent Search Bar with Live Suggestions -->
+      <div class="header-search">
+        <form class="search-form" id="search-form" action="#" onsubmit="return false;">
+          <input 
+            type="text" 
+            id="main-search-input" 
+            class="search-input" 
+            placeholder="ابحث عن ثلاجة، غسالة، شاشة، تكييف أو ماركة مثل Samsung..." 
+            autocomplete="off"
+          />
+          <button type="submit" class="search-btn" aria-label="بحث">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+
+        <!-- Live Search Dropdown -->
+        <div class="search-results-dropdown" id="search-dropdown"></div>
+      </div>
+
+      <!-- Header Quick Actions -->
+      <div class="header-actions">
+        <!-- Hotline Support -->
+        <a href="tel:19875" class="header-action-btn" title="خدمة العملاء">
+          <div class="action-icon-wrap">
+            <i class="fa-solid fa-phone-volume"></i>
+          </div>
+          <div class="action-text">
+            <span class="action-label">خدمة العملاء</span>
+            <span class="action-value">19875</span>
+          </div>
+        </a>
+
+        <!-- Wishlist Button -->
+        <button class="header-action-btn" onclick="filterByCategory('all')" title="قائمة المفضلة">
+          <div class="action-icon-wrap">
+            <i class="fa-regular fa-heart"></i>
+            <span class="badge-count" id="wishlist-badge">0</span>
+          </div>
+          <div class="action-text">
+            <span class="action-label">المفضلة</span>
+            <span class="action-value">قائمتي</span>
+          </div>
+        </button>
+
+        <!-- Cart Button -->
+        <button class="header-action-btn" id="open-cart-btn" onclick="openCartDrawer()" title="سلة المشتريات">
+          <div class="action-icon-wrap">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="badge-count" id="cart-badge">0</span>
+          </div>
+          <div class="action-text">
+            <span class="action-label">سلة التسوق</span>
+            <span class="action-value" id="cart-total-display">0 ج.م</span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Category Quick Navigation Bar -->
+    <nav class="category-nav-bar" aria-label="أقسام المتجر">
+      <div class="container cat-nav-inner">
+        <div class="cat-nav-links">
+          <a href="#featured-products-section" class="cat-nav-link active" onclick="filterByCategory('all')">
+            <i class="fa-solid fa-boxes-stacked"></i> جميع الأجهزة
+          </a>
+          <a href="#featured-products-section" class="cat-nav-link" onclick="filterByCategory('refrigerators')">
+            <i class="fa-solid fa-snowflake"></i> ثلاجات وديب فريزر
+          </a>
+          <a href="#featured-products-section" class="cat-nav-link" onclick="filterByCategory('washing-machines')">
+            <i class="fa-solid fa-soap"></i> غسالات ومجففات
+          </a>
+          <a href="#featured-products-section" class="cat-nav-link" onclick="filterByCategory('tvs')">
+            <i class="fa-solid fa-tv"></i> شاشات وتلفزيونات
+          </a>
+          <a href="#featured-products-section" class="cat-nav-link" onclick="filterByCategory('air-conditioners')">
+            <i class="fa-solid fa-wind"></i> تكييفات هواء
+          </a>
+          <a href="#featured-products-section" class="cat-nav-link" onclick="filterByCategory('cookers')">
+            <i class="fa-solid fa-fire-burner"></i> بوتاجازات وأفران
+          </a>
+          <a href="#featured-products-section" class="cat-nav-link" onclick="filterByCategory('microwaves')">
+            <i class="fa-solid fa-microchip"></i> ميكروويف
+          </a>
+          <a href="#deals-section" class="cat-nav-link hot-deal">
+            <i class="fa-solid fa-fire"></i> صفقات الأسبوع الساخنة 🔥
+          </a>
+        </div>
+        <div class="hotline-badge">
+          <i class="fa-solid fa-truck-fast"></i> توصيل سريع لباب البيت
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ============================================================
+       HERO SLIDER SECTION (Swiper.js)
+       ============================================================ -->
+  <section class="hero-section" aria-label="العروض الرئيسية">
+    <div class="container">
+      <div class="swiper hero-swiper hero-slider">
+        <div class="swiper-wrapper">
+          
+          <!-- Slide 1: Refrigerators -->
+          <div class="swiper-slide hero-slide slide-blue">
+            <div class="hero-grid">
+              <div class="hero-content">
+                <div class="hero-badge-tag">
+                  <i class="fa-solid fa-star"></i> أقوى عروض الموسم 2026
+                </div>
+                <h2 class="hero-title">ثورة التبريد الذكي <span>ثلاجات نوفروست المتطورة</span></h2>
+                <p class="hero-subtitle">احفظ أطعمتك طازجة لأطول فترة مع أحدث تقنيات الإنفرتر الموفرة للطاقة وتدفق الهواء المتعدد بضمان 10 سنوات معتمد.</p>
+                <div class="hero-cta-group">
+                  <button class="btn btn-primary" onclick="filterByCategory('refrigerators')">
+                    <i class="fa-solid fa-bag-shopping"></i> تسوق الثلاجات الآن
+                  </button>
+                  <a href="#deals-section" class="btn btn-outline-white">
+                    <i class="fa-solid fa-percent"></i> خصومات تصل إلى 25%
+                  </a>
+                </div>
+              </div>
+              <div class="hero-visual">
+                <div class="hero-img-wrap">
+                  <img src="assets/images/products/fridge-01.jpg" alt="ثلاجة سامسونج نوفروست 4 أبواب" />
+                </div>
+                <div class="hero-floating-badge">
+                  <div class="floating-badge-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                  </div>
+                  <div class="floating-badge-text">
+                    <strong>ضمان معتمد 10 سنوات</strong>
+                    <small>قطع غيار أصلية وصيانة دورية</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2: Smart TVs -->
+          <div class="swiper-slide hero-slide slide-dark">
+            <div class="hero-grid">
+              <div class="hero-content">
+                <div class="hero-badge-tag">
+                  <i class="fa-solid fa-film"></i> ترفيه منزلي سينمائي
+                </div>
+                <h2 class="hero-title">عالم السينما في منزلك <span>شاشات 4K و OLED الذكية</span></h2>
+                <p class="hero-subtitle">ألوان طبيعية تنبض بالحياة، معالجات الذكاء الاصطناعي الفائقة، وصوت محيطي دولبي أتموس. استمتع بأقوى تجربة مشاهدة مع كبرى الماركات العالمية.</p>
+                <div class="hero-cta-group">
+                  <button class="btn btn-primary" onclick="filterByCategory('tvs')">
+                    <i class="fa-solid fa-tv"></i> استكشف الشاشات
+                  </button>
+                  <a href="#deals-section" class="btn btn-outline-white">
+                    <i class="fa-solid fa-credit-card"></i> تقسيط حتى 24 شهر بدون فوائد
+                  </a>
+                </div>
+              </div>
+              <div class="hero-visual">
+                <div class="hero-img-wrap">
+                  <img src="assets/images/products/tv-02.jpg" alt="شاشة إل جي OLED evo 4K" />
+                </div>
+                <div class="hero-floating-badge">
+                  <div class="floating-badge-icon">
+                    <i class="fa-solid fa-tags"></i>
+                  </div>
+                  <div class="floating-badge-text">
+                    <strong>وفر حتى 8,000 ج.م</strong>
+                    <small>عروض حصرية لفترة محدودة</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3: Washing Machines -->
+          <div class="swiper-slide hero-slide slide-burgundy">
+            <div class="hero-grid">
+              <div class="hero-content">
+                <div class="hero-badge-tag">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> عناية متكاملة بالملابس
+                </div>
+                <h2 class="hero-title">غسيل ذكي بالبخار <span>نظافة عميقة وتعقيم فائق</span></h2>
+                <p class="hero-subtitle">أحدث غسالات التحميل الأمامي بمحركات الدفع المباشر وتقنية البخار الصحي للقضاء على 99.9% من البكتيريا وحماية أنسجة الأقمشة.</p>
+                <div class="hero-cta-group">
+                  <button class="btn btn-primary" onclick="filterByCategory('washing-machines')">
+                    <i class="fa-solid fa-soap"></i> تسوق الغسالات
+                  </button>
+                  <a href="#deals-section" class="btn btn-outline-white">
+                    <i class="fa-solid fa-truck"></i> توصيل وتركيب مجاني
+                  </a>
+                </div>
+              </div>
+              <div class="hero-visual">
+                <div class="hero-img-wrap">
+                  <img src="assets/images/products/washer-01.jpg" alt="غسالة باناسونيك بالبخار الذكي" />
+                </div>
+                <div class="hero-floating-badge">
+                  <div class="floating-badge-icon">
+                    <i class="fa-solid fa-bolt"></i>
+                  </div>
+                  <div class="floating-badge-text">
+                    <strong>توفير 40% في استهلاك الطاقة</strong>
+                    <small>مستوى كفاءة طاقة A+++</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Slider Controls -->
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TRUST & BENEFITS SECTION
+       ============================================================ -->
+  <section class="trust-section" aria-label="مزايا التسوق">
+    <div class="container">
+      <div class="trust-grid">
+        
+        <div class="trust-card">
+          <div class="trust-icon blue">
+            <i class="fa-solid fa-certificate"></i>
+          </div>
+          <div class="trust-info">
+            <h3>منتجات أصلية 100%</h3>
+            <p>جميع الأجهزة بضمان الوكيل الرسمي المعتمد في مصر</p>
+          </div>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon green">
+            <i class="fa-solid fa-truck-ramp-box"></i>
+          </div>
+          <div class="trust-info">
+            <h3>توصيل وتركيب سريع</h3>
+            <p>شحن آمن لباب البيت وفريق فني متخصص للتركيب</p>
+          </div>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon amber">
+            <i class="fa-solid fa-credit-card"></i>
+          </div>
+          <div class="trust-info">
+            <h3>دفع آمن وتقسيط ميسر</h3>
+            <p>الدفع عند الاستلام أو بالتقسيط عبر البنوك وشركات التمويل</p>
+          </div>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon purple">
+            <i class="fa-solid fa-rotate-left"></i>
+          </div>
+          <div class="trust-info">
+            <h3>استبدال واسترجاع سهل</h3>
+            <p>إمكانية الإرجاع خلال 14 يوماً وفق قانون حماية المستهلك</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SHOP BY CATEGORY SECTION
+       ============================================================ -->
+  <section class="section" id="categories-section" aria-label="أقسام المنتجات">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-badge">تصفح شامل</span>
+          <h2 class="section-title">تسوق حسب الفئة</h2>
+          <p class="section-subtitle">اختر القسم وتصفح أحدث الموديلات المتوفرة لدينا</p>
+        </div>
+        <button class="btn btn-primary" onclick="resetFilters()">
+          <span>عرض الكل</span>
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+      </div>
+
+      <!-- Categories Container rendered dynamically -->
+      <div class="categories-container" id="categories-container"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FLASH DEALS / OFFERS OF THE WEEK
+       ============================================================ -->
+  <section class="deals-section" id="deals-section" aria-label="عروض الأسبوع">
+    <div class="container">
+      
+      <div class="deals-header">
+        <div class="section-title-wrap">
+          <span class="section-badge" style="color: var(--sale);">عروض مؤقتة حصرية</span>
+          <h2 class="section-title" style="color: #991b1b;">صفقات الأسبوع الكبرى 🔥</h2>
+          <p class="section-subtitle">أسعار استثنائية على أجهزة مختارة لفترة محدودة أو حتى نفاد الكمية</p>
+        </div>
+
+        <!-- Live Countdown Timer -->
+        <div class="deals-countdown-box">
+          <div class="countdown-label">
+            <i class="fa-solid fa-stopwatch"></i> ينتهي العرض خلال:
+          </div>
+          <div class="countdown-timer">
+            <span class="time-unit" id="timer-hours">23</span>
+            <span class="time-sep">:</span>
+            <span class="time-unit" id="timer-mins">45</span>
+            <span class="time-sep">:</span>
+            <span class="time-unit" id="timer-secs">18</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deals Cards Container rendered dynamically -->
+      <div class="deals-grid" id="deals-container"></div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FEATURED PRODUCTS SECTION
+       ============================================================ -->
+  <section class="products-section" id="featured-products-section" aria-label="منتجات المتجر">
+    <div class="container">
+      
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-badge">تشكيلة واسعة</span>
+          <h2 class="section-title">الأجهزة المنزلية والكهربائية <span id="products-count" style="font-size: 1rem; color: var(--text-muted); font-weight: 600;"></span></h2>
+          <p class="section-subtitle">أقوى تشكيلة من كبرى الماركات العالمية بأسعار تنافسية وضمان حقيقي</p>
+        </div>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="filter-tabs-wrapper">
+        <button class="filter-tab-btn active" data-category="all" onclick="filterByCategory('all')">جميع الأجهزة (18)</button>
+        <button class="filter-tab-btn" data-category="refrigerators" onclick="filterByCategory('refrigerators')">ثلاجات وديب فريزر (3)</button>
+        <button class="filter-tab-btn" data-category="washing-machines" onclick="filterByCategory('washing-machines')">غسالات ملابس (3)</button>
+        <button class="filter-tab-btn" data-category="tvs" onclick="filterByCategory('tvs')">شاشات وتلفزيونات (2)</button>
+        <button class="filter-tab-btn" data-category="air-conditioners" onclick="filterByCategory('air-conditioners')">تكييفات هواء (2)</button>
+        <button class="filter-tab-btn" data-category="cookers" onclick="filterByCategory('cookers')">بوتاجازات وأفران (2)</button>
+        <button class="filter-tab-btn" data-category="microwaves" onclick="filterByCategory('microwaves')">ميكروويف (2)</button>
+        <button class="filter-tab-btn" data-category="dishwashers" onclick="filterByCategory('dishwashers')">غسالات أطباق (1)</button>
+        <button class="filter-tab-btn" data-category="small-appliances" onclick="filterByCategory('small-appliances')">أجهزة صغيرة (3)</button>
+      </div>
+
+      <!-- Main Products Grid (18 real cards) -->
+      <div class="products-grid" id="products-grid"></div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROMOTIONAL DUAL BANNERS
+       ============================================================ -->
+  <section class="promo-banners-section" aria-label="لافتات ترويجية">
+    <div class="container">
+      <div class="promo-grid">
+        
+        <!-- Banner 1: ACs -->
+        <div class="promo-banner blue">
+          <div class="promo-content">
+            <span class="promo-tag">موسم الصيف</span>
+            <h3 class="promo-title">تكييفات إنفرتر بارد / ساخن بخصم 15%</h3>
+            <p class="promo-desc">استمتع بجو منعش وفواتير كهرباء منخفضة مع تركيب وتوصيل مجاني لكافة أجهزة التكييف.</p>
+            <button class="promo-btn" onclick="filterByCategory('air-conditioners')">
+              <span>تسوق التكييفات</span>
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+          </div>
+          <div class="promo-img-wrap">
+            <img src="assets/images/products/ac-01.jpg" alt="تكييف انفرتر سبليت" />
+          </div>
+        </div>
+
+        <!-- Banner 2: Kitchen Appliances -->
+        <div class="promo-banner dark">
+          <div class="promo-content">
+            <span class="promo-tag">المطبخ العصري</span>
+            <h3 class="promo-title">قلايات هوائية وميكروويف طهي صحي وسريع</h3>
+            <p class="promo-desc">أحدث ابتكارات المطبخ لتناول وجبات صحية خالية من الزيوت بخصومات استثنائية.</p>
+            <button class="promo-btn" onclick="filterByCategory('small-appliances')">
+              <span>اكتشف أجهزة المطبخ</span>
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+          </div>
+          <div class="promo-img-wrap">
+            <img src="assets/images/products/small-01.jpg" alt="قلاية هوائية نينجا" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TRUSTED BRANDS STRIP
+       ============================================================ -->
+  <section class="brands-section" aria-label="العلامات التجارية المعتمدة">
+    <div class="container">
+      <div class="section-header" style="justify-content: center; text-align: center; margin-bottom: 24px;">
+        <div class="section-title-wrap">
+          <span class="section-badge">شركاء النجاح</span>
+          <h2 class="section-title">أشهر الماركات العالمية والمحلية المعتمدة</h2>
+          <p class="section-subtitle">نحن موزعون معتمدون لجميع هذه العلامات التجارية مع شهادات ضمان أصلية</p>
+        </div>
+      </div>
+      
+      <!-- Brands Grid rendered dynamically -->
+      <div class="brands-grid" id="brands-container"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       NEWSLETTER STRIP
+       ============================================================ -->
+  <section class="newsletter-strip" aria-label="النشرة البريدية">
+    <div class="container">
+      <div class="newsletter-inner">
+        <div class="newsletter-text">
+          <h3>اشترك في النشرة الإخبارية واحصل على خصم 500 ج.م</h3>
+          <p>كن أول من يعلم بأحدث العروض والخصومات الحصرية على الأجهزة المنزلية.</p>
+        </div>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('تم الاشتراك بنجاح', 'شكراً لاشتراكك في نشرة العروض الحصرية'); this.reset();">
+          <input type="email" class="newsletter-input" placeholder="أدخل بريدك الإلكتروني..." required />
+          <button type="submit" class="newsletter-btn">اشتراك الآن</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STORE FOOTER
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <!-- About ElectroTech -->
+        <div class="footer-col footer-about">
+          <div class="brand-logo" style="margin-bottom: 16px;">
+            <div class="logo-icon" style="background: var(--accent);">
+              <i class="fa-solid fa-bolt-lightning"></i>
+            </div>
+            <div class="logo-text">
+              <h3 style="color:#fff; font-size:1.3rem; font-weight:800;">إلكترو تك</h3>
+              <span style="color:#94a3b8;">متجرك الأول للأجهزة الكهربائية في مصر</span>
+            </div>
+          </div>
+          <p>متجر إلكترو تك هو وجهتك الرائدة لشراء الأجهزة الكهربائية والمنزلية الأصلية في مصر. نقدم أفضل الأسعار مع ضمان الوكلاء المعتمدين وتسهيلات دفع وتقسيط تناسب الجميع.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-link" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="social-link" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" class="social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <h4>روابط سريعة</h4>
+          <ul class="footer-links">
+            <li><a href="#featured-products-section" onclick="filterByCategory('all')"><i class="fa-solid fa-angle-left"></i> جميع الأجهزة</a></li>
+            <li><a href="#deals-section"><i class="fa-solid fa-angle-left"></i> عروض الأسبوع</a></li>
+            <li><a href="#categories-section"><i class="fa-solid fa-angle-left"></i> تسوق حسب الفئة</a></li>
+            <li><a href="#categories-section"><i class="fa-solid fa-angle-left"></i> الشركاء والعلامات التجارية</a></li>
+            <li><a href="#"><i class="fa-solid fa-angle-left"></i> سياسة الضمان والاسترجاع</a></li>
+          </ul>
+        </div>
+
+        <!-- Appliance Categories -->
+        <div class="footer-col">
+          <h4>أقسام الأجهزة</h4>
+          <ul class="footer-links">
+            <li><a href="#featured-products-section" onclick="filterByCategory('refrigerators')"><i class="fa-solid fa-angle-left"></i> ثلاجات وديب فريزر</a></li>
+            <li><a href="#featured-products-section" onclick="filterByCategory('washing-machines')"><i class="fa-solid fa-angle-left"></i> غسالات ومجففات</a></li>
+            <li><a href="#featured-products-section" onclick="filterByCategory('tvs')"><i class="fa-solid fa-angle-left"></i> شاشات وتلفزيونات</a></li>
+            <li><a href="#featured-products-section" onclick="filterByCategory('air-conditioners')"><i class="fa-solid fa-angle-left"></i> تكييفات هواء</a></li>
+            <li><a href="#featured-products-section" onclick="filterByCategory('cookers')"><i class="fa-solid fa-angle-left"></i> بوتاجازات وأفران</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Service & Contact -->
+        <div class="footer-col">
+          <h4>خدمة العملاء والدعم</h4>
+          
+          <div class="footer-contact-item">
+            <div class="footer-contact-icon">
+              <i class="fa-solid fa-headset"></i>
+            </div>
+            <div>
+              <strong>الخط الساخن الموحد</strong>
+              <span>19875 (من 9 ص حتى 11 م طوال الأسبوع)</span>
+            </div>
+          </div>
+
+          <div class="footer-contact-item">
+            <div class="footer-contact-icon">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <strong>المقر والمعارض الرئيسية</strong>
+              <span>القاهرة، الجيزة، الإسكندرية، والدلتا</span>
+            </div>
+          </div>
+
+          <div class="footer-contact-item">
+            <div class="footer-contact-icon">
+              <i class="fa-solid fa-shield-check"></i>
+            </div>
+            <div>
+              <strong>شهادة الجودة والضمان</strong>
+              <span>معتمد من جهاز حماية المستهلك المصري</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar with Payment Icons -->
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          © 2026 إلكترو تك (ElectroTech). جميع الحقوق محفوظة. تم التطوير كنموذج عرض أجهزة كهربائية.
+        </div>
+        <div class="footer-payments">
+          <span class="payment-badge"><i class="fa-brands fa-cc-visa"></i> Visa</span>
+          <span class="payment-badge"><i class="fa-brands fa-cc-mastercard"></i> MasterCard</span>
+          <span class="payment-badge"><i class="fa-solid fa-credit-card"></i> ميزة Meeza</span>
+          <span class="payment-badge"><i class="fa-solid fa-money-bill-wave"></i> الدفع عند الاستلام</span>
+          <span class="payment-badge"><i class="fa-solid fa-hand-holding-dollar"></i> تقسيط فوري</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       OFFCANVAS CART DRAWER COMPONENT
+       ============================================================ -->
+  <div class="cart-drawer-overlay" id="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="سلة التسوق">
+    <div class="cart-drawer-header">
+      <h3>
+        <i class="fa-solid fa-cart-shopping" style="color: var(--accent);"></i>
+        <span>سلة المشتريات</span>
+        <span id="drawer-cart-count" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">(0 قطع)</span>
+      </h3>
+      <button class="cart-close-btn" onclick="closeCartDrawer()" aria-label="إغلاق السلة">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Scrollable Drawer Items List -->
+    <div class="cart-drawer-body" id="cart-drawer-body"></div>
+
+    <!-- Drawer Footer with Subtotal & Checkout -->
+    <div class="cart-drawer-footer" id="cart-drawer-footer"></div>
+  </aside>
+
+  <!-- ============================================================
+       QUICK CHECKOUT MODAL
+       ============================================================ -->
+  <div class="checkout-modal-overlay" id="checkout-modal-overlay">
+    <div class="checkout-modal-card">
+      <div id="checkout-modal-content">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+          <h3 style="margin: 0; font-size: 1.3rem;">
+            <i class="fa-solid fa-truck-fast" style="color: var(--primary);"></i> إتمام الشراء والتوصيل
+          </h3>
+          <button class="cart-close-btn" onclick="closeCheckoutModal()" aria-label="إغلاق">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <p style="text-align: right; margin-bottom: 18px; font-size: 0.875rem;">
+          أدخل بيانات التوصيل وسيتم تأكيد طلبك وشحنه فوراً مع الدفع عند الاستلام.
+        </p>
+
+        <form onsubmit="handleCheckoutSubmit(event)" style="text-align: right;">
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;">الاسم بالكامل *</label>
+            <input type="text" id="customer-name" class="newsletter-input" style="width: 100%; color: var(--text-main); background: var(--bg-subtle); border-color: var(--border-color);" placeholder="مثال: أحمد عبد الرحمن" required />
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;">رقم الهاتف / الموبايل *</label>
+            <input type="tel" id="customer-phone" class="newsletter-input" style="width: 100%; color: var(--text-main); background: var(--bg-subtle); border-color: var(--border-color); direction: ltr; text-align: right;" placeholder="01XXXXXXXXX" pattern="01[0-9]{9}" required />
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;">المحافظة والمدينة *</label>
+            <select id="customer-city" class="newsletter-input" style="width: 100%; color: var(--text-main); background: var(--bg-subtle); border-color: var(--border-color);" required>
+              <option value="القاهرة">القاهرة</option>
+              <option value="الجيزة">الجيزة</option>
+              <option value="الإسكندرية">الإسكندرية</option>
+              <option value="القليوبية">القليوبية</option>
+              <option value="الشرقية">الشرقية</option>
+              <option value="الدقهلية">الدقهلية</option>
+              <option value="الغربية">الغربية</option>
+              <option value="باقي المحافظات">باقي المحافظات</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;">العنوان بالتفصيل *</label>
+            <input type="text" id="customer-address" class="newsletter-input" style="width: 100%; color: var(--text-main); background: var(--bg-subtle); border-color: var(--border-color);" placeholder="اسم الشارع، رقم العقار، رقم الشقة" required />
+          </div>
+
+          <div class="order-details-box" style="margin-bottom: 20px;">
+            <div class="order-detail-row">
+              <span>عدد الأجهزة:</span>
+              <strong id="checkout-items-count">0 أجهزة</strong>
+            </div>
+            <div class="order-detail-row">
+              <span>مصاريف الشحن والتركيب:</span>
+              <span style="color: var(--success); font-weight: 700;">مجاني</span>
+            </div>
+            <div class="order-detail-row">
+              <span>المبلغ الإجمالي للدفع:</span>
+              <span id="checkout-total-price" style="color: var(--sale); font-size: 1.2rem; font-weight: 900;">0 ج.م</span>
+            </div>
+          </div>
+
+          <button type="submit" class="cart-checkout-btn">
+            <i class="fa-solid fa-check"></i>
+            <span>تأكيد الطلب وشحن الأجهزة</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Swiper.js Bundle Script -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- Store Data & App Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  
+  <!-- Dark Mode Toggle Button -->
+  <button class="dark-mode-toggle" id="darkModeToggle" title="تفعيل/إلغاء وضع الظلام" aria-label="تبديل الوضع المظلم">
+    <i class="fa-solid fa-moon" id="darkModeIcon"></i>
+  </button>
+  
+  <!-- Dark Mode JavaScript -->
+  <script>
+    // Dark mode functionality for index.html only
+    document.addEventListener('DOMContentLoaded', function() {
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      const darkModeIcon = document.getElementById('darkModeIcon');
+      const htmlElement = document.documentElement;
+      
+      // Add smooth transition when toggling
+      htmlElement.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+      
+      // Check for saved dark mode preference or prefer-color-scheme
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const savedMode = localStorage.getItem('darkMode');
+      
+      // Initialize dark mode if previously saved or system prefers dark
+      if (savedMode === 'enabled' || (!savedMode && prefersDark)) {
+        enableDarkMode();
+      }
+      
+      // Toggle dark mode on button click
+      darkModeToggle.addEventListener('click', function() {
+        // Add click animation
+        this.style.transform = 'scale(0.9) rotate(180deg)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 200);
+        
+        if (htmlElement.classList.contains('dark-mode')) {
+          disableDarkMode();
+        } else {
+          enableDarkMode();
+        }
+      });
+      
+      function enableDarkMode() {
+        htmlElement.classList.add('dark-mode');
+        darkModeIcon.className = 'fa-solid fa-sun';
+        darkModeToggle.title = 'إلغاء الوضع المظلم';
+        localStorage.setItem('darkMode', 'enabled');
+        
+        // Show toast notification
+        showToast('تم تفعيل الوضع المظلم', '🌙 تم التبديل إلى الوضع المظلم بنجاح');
+      }
+      
+      function disableDarkMode() {
+        htmlElement.classList.remove('dark-mode');
+        darkModeIcon.className = 'fa-solid fa-moon';
+        darkModeToggle.title = 'تفعيل الوضع المظلم';
+        localStorage.setItem('darkMode', 'disabled');
+        
+        // Show toast notification
+        showToast('تم إلغاء الوضع المظلم', '☀️ تم التبديل إلى الوضع العادي بنجاح');
+      }
+      
+      // Listen for system color scheme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('darkMode')) {
+          if (e.matches) {
+            enableDarkMode();
+          } else {
+            disableDarkMode();
+          }
+        }
+      });
+      
+      // Add keyboard shortcut (Ctrl/Cmd + D)
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+          e.preventDefault();
+          darkModeToggle.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

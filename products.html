@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المنتجات — VoltStore</title>
+  <meta name="description" content="تصفح جميع الأجهزة الكهربائية والمنزلية في VoltStore. ثلاجات، غسالات، تلفزيونات، مكيفات، وأكثر." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content">
+
+  <div class="page-title-bar">
+    <div class="container">
+      <h1 id="page-category-title">جميع المنتجات</h1>
+      <nav class="breadcrumb" aria-label="مسار التنقل">
+        <a href="index.html">الرئيسية</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">المنتجات</span>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="shop-layout">
+
+      <!-- ── Filter Panel ── -->
+      <aside id="filter-panel" class="filter-panel" aria-label="خيارات التصفية">
+        <div class="filter-title">
+          <span>تصفية النتائج</span>
+          <button class="btn btn-ghost btn-sm" onclick="clearAllFilters()">مسح الكل</button>
+        </div>
+
+        <div class="filter-section">
+          <h4>بحث</h4>
+          <div style="position:relative;">
+            <input type="search" id="products-search" class="form-control" placeholder="اسم المنتج، الماركة..." aria-label="بحث في المنتجات" />
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <h4>الفئة</h4>
+          <div id="filter-categories"></div>
+        </div>
+
+        <div class="filter-section">
+          <h4>الماركة</h4>
+          <div id="filter-brands"></div>
+        </div>
+
+        <div class="filter-section">
+          <h4>نطاق السعر (ر.س)</h4>
+          <div class="price-range">
+            <input type="number" id="price-min" class="form-control" placeholder="من" min="0" aria-label="السعر الأدنى" />
+            <span>—</span>
+            <input type="number" id="price-max" class="form-control" placeholder="إلى" min="0" aria-label="السعر الأعلى" />
+          </div>
+          <button class="btn btn-outline btn-sm btn-full mt-2" id="apply-price">تطبيق</button>
+        </div>
+
+        <div class="filter-section">
+          <h4>التوفر</h4>
+          <label class="filter-checkbox">
+            <input type="checkbox" id="filter-in-stock" />
+            <span>المتوفر فقط</span>
+          </label>
+        </div>
+      </aside>
+
+      <!-- ── Products Area ── -->
+      <div>
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <button class="filter-toggle" id="filter-toggle-btn" aria-label="عرض/إخفاء التصفية" aria-controls="filter-panel">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+              تصفية المنتجات
+            </button>
+            <span id="product-count" aria-live="polite">جاري التحميل...</span>
+          </div>
+          <div class="toolbar-right">
+            <label for="sort-select" class="sr-only">ترتيب حسب</label>
+            <select class="sort-select" id="sort-select" aria-label="ترتيب المنتجات">
+              <option value="default">الترتيب الافتراضي</option>
+              <option value="price-asc">السعر: من الأقل</option>
+              <option value="price-desc">السعر: من الأعلى</option>
+              <option value="name">الاسم أ-ي</option>
+              <option value="newest">الأحدث</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="products-grid" id="products-grid" role="list" aria-label="قائمة المنتجات">
+          <div class="loading-spinner" style="grid-column:1/-1;">
+            <div class="spinner" role="status" aria-label="جاري التحميل..."></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/products.js"></script>
+</body>
+</html>

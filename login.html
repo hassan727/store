@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الدخول — VoltStore</title>
+  <meta name="description" content="تسجيل الدخول إلى حسابك في متجر VoltStore للأجهزة الكهربائية." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content">
+  <div class="auth-page">
+    <div class="container">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <a class="logo" href="index.html" style="justify-content:center;">
+            <div class="logo-icon">${icon('bolt')}</div>
+            <span class="logo-text">Volt<span>Store</span></span>
+          </a>
+        </div>
+        <h2 class="auth-title">تسجيل الدخول</h2>
+        <p class="auth-sub">أدخل بياناتك للوصول إلى حسابك وطلباتك</p>
+
+        <form id="login-form">
+          <div class="form-group" style="margin-bottom:16px;">
+            <label for="login-email">البريد الإلكتروني</label>
+            <input type="email" id="login-email" class="form-control" placeholder="user@example.com" value="customer@voltstore.sa" required dir="ltr" style="text-align:right;" />
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label for="login-password" style="margin:0;">كلمة المرور</label>
+              <a href="#" onclick="alert('في هذه النسخة التجريبية يمكنك تسجيل الدخول مباشرة بأي كلمة مرور'); return false;" style="font-size:0.8rem; color:var(--primary);">نسيت كلمة المرور؟</a>
+            </div>
+            <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="123456" required dir="ltr" style="text-align:right;" />
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+            <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;">
+              <input type="checkbox" id="remember-me" checked style="accent-color:var(--primary);" />
+              <span>تذكرني</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="login-btn">
+            تسجيل الدخول
+          </button>
+        </form>
+
+        <div class="demo-notice" style="margin-top:24px;">
+          <strong>بيانات تجريبية سريعة:</strong>
+          <div style="margin-top:6px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px;">
+            <div>• عميل: <code>customer@voltstore.sa</code> (يدخل لحساب العميل)</div>
+            <div>• مدير: <code>admin@voltstore.sa</code> (يدخل للوحة الإدارة)</div>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:20px; font-size:0.88rem; color:var(--text-muted);">
+          <span>تريد لوحة التحكم مباشرة؟ </span>
+          <a href="admin/index.html" style="color:var(--primary); font-weight:600;">لوحة الإدارة</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initPage('login');
+
+  const form = document.getElementById('login-form');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    
+    // Check if admin login
+    if (email.includes('admin')) {
+      localStorage.setItem('auth_user', JSON.stringify({ role: 'admin', name: 'المدير العام', email }));
+      showToast('مرحباً بك! جاري التحويل للوحة الإدارة...', 'success');
+      setTimeout(() => { window.location.href = 'admin/index.html'; }, 800);
+    } else {
+      localStorage.setItem('auth_user', JSON.stringify({ role: 'customer', name: 'أحمد محمد', email }));
+      showToast('تم تسجيل الدخول بنجاح!', 'success');
+      setTimeout(() => { window.location.href = 'account.html'; }, 800);
+    }
+  });
+});
+</script>
+</body>
+</html>

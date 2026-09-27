@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تعديل / إضافة منتج — إدارة VoltStore</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+</head>
+<body class="admin-body">
+
+  <div id="admin-sidebar-root"></div>
+
+  <div class="admin-main">
+    <div id="admin-header-root"></div>
+
+    <main class="admin-content" style="padding: 28px; max-width:900px;">
+      <div style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+        <a href="products.html" class="btn btn-ghost btn-sm">
+          ← العودة لقائمة المنتجات
+        </a>
+      </div>
+
+      <div class="card" style="padding:32px;">
+        <h3 id="form-heading" style="margin-bottom:24px; padding-bottom:12px; border-bottom:1px solid var(--border);">إضافة منتج جديد</h3>
+
+        <form id="product-form">
+          <div style="display:grid; grid-template-columns:2fr 1fr; gap:20px; margin-bottom:16px;">
+            <div class="form-group">
+              <label for="p-name">اسم المنتج <span style="color:var(--error)">*</span></label>
+              <input type="text" id="p-name" class="form-control" required placeholder="مثال: ثلاجة سامسونج نوفروست 500 لتر" />
+            </div>
+
+            <div class="form-group">
+              <label for="p-brand">الماركة <span style="color:var(--error)">*</span></label>
+              <input type="text" id="p-brand" class="form-control" required placeholder="Samsung, LG, Bosch..." />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-bottom:16px;">
+            <div class="form-group">
+              <label for="p-category">الفئة <span style="color:var(--error)">*</span></label>
+              <select id="p-category" class="form-control" required>
+                <!-- Populated by JS -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="p-price">السعر الحالي (ر.س) <span style="color:var(--error)">*</span></label>
+              <input type="number" id="p-price" class="form-control" required min="1" step="any" placeholder="8500" />
+            </div>
+
+            <div class="form-group">
+              <label for="p-old-price">السعر السابق قبل الخصم (اختياري)</label>
+              <input type="number" id="p-old-price" class="form-control" min="0" step="any" placeholder="10200" />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:16px;">
+            <div class="form-group">
+              <label for="p-sku">رمز المنتج SKU</label>
+              <input type="text" id="p-sku" class="form-control" placeholder="RF500-SAM-NF" />
+            </div>
+
+            <div class="form-group">
+              <label for="p-stock">الكمية المتوفرة بالمخزن</label>
+              <input type="number" id="p-stock" class="form-control" required min="0" value="10" />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <label for="p-image">رابط صورة المنتج (URL)</label>
+            <input type="url" id="p-image" class="form-control" placeholder="https://example.com/image.jpg" />
+            <small style="color:var(--text-muted); font-size:0.78rem;">اترك فارغاً لاستخدام صورة افتراضية مناسبة</small>
+          </div>
+
+          <div class="form-group" style="margin-bottom:20px;">
+            <label for="p-desc">وصف المنتج ومميزاته</label>
+            <textarea id="p-desc" class="form-control" rows="4" placeholder="وصف كامل ومواصفات المنتج..."></textarea>
+          </div>
+
+          <div style="display:flex; gap:24px; margin-bottom:28px;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="p-instock" checked style="accent-color:var(--primary); width:18px; height:18px;" />
+              <span>متوفر للبيع في المتجر</span>
+            </label>
+
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="p-featured" style="accent-color:var(--primary); width:18px; height:18px;" />
+              <span>عرض في قسم المنتجات المميزة بالرئيسية</span>
+            </label>
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <a href="products.html" class="btn btn-outline">إلغاء</a>
+            <button type="submit" class="btn btn-primary" id="save-btn">حفظ المنتج</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    let editId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminPage('products', 'تعديل أو إضافة منتج');
+      populateCategories();
+
+      const urlId = getParam('id');
+      if (urlId) {
+        editId = parseInt(urlId, 10);
+        loadProductForEdit(editId);
+      }
+
+      document.getElementById('product-form').addEventListener('submit', handleSaveProduct);
+    });
+
+    function populateCategories() {
+      const cats = getStoredCategories();
+      const select = document.getElementById('p-category');
+      cats.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.slug;
+        opt.textContent = c.name;
+        select.appendChild(opt);
+      });
+    }
+
+    function loadProductForEdit(id) {
+      const products = getStoredProducts();
+      const prod = products.find(p => p.id === id);
+      if (!prod) return;
+
+      document.getElementById('form-heading').textContent = `تعديل المنتج: ${prod.name}`;
+      document.title = `تعديل ${prod.name} — إدارة VoltStore`;
+
+      document.getElementById('p-name').value = prod.name;
+      document.getElementById('p-brand').value = prod.brand;
+      document.getElementById('p-category').value = prod.category;
+      document.getElementById('p-price').value = prod.price;
+      document.getElementById('p-old-price').value = prod.oldPrice || '';
+      document.getElementById('p-sku').value = prod.sku || '';
+      document.getElementById('p-stock').value = prod.stockQty !== undefined ? prod.stockQty : 10;
+      document.getElementById('p-image').value = prod.image || '';
+      document.getElementById('p-desc').value = prod.description || '';
+      document.getElementById('p-instock').checked = prod.inStock !== false;
+      document.getElementById('p-featured').checked = !!prod.featured;
+    }
+
+    function handleSaveProduct(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('p-name').value.trim();
+      const brand = document.getElementById('p-brand').value.trim();
+      const category = document.getElementById('p-category').value;
+      const price = parseFloat(document.getElementById('p-price').value);
+      const oldPriceVal = document.getElementById('p-old-price').value;
+      const oldPrice = oldPriceVal ? parseFloat(oldPriceVal) : null;
+      const sku = document.getElementById('p-sku').value.trim();
+      const stockQty = parseInt(document.getElementById('p-stock').value, 10);
+      const image = document.getElementById('p-image').value.trim() || `https://placehold.co/400x400/1d3557/ffffff?text=${encodeURIComponent(brand)}+${encodeURIComponent(name.slice(0, 10))}`;
+      const description = document.getElementById('p-desc').value.trim();
+      const inStock = document.getElementById('p-instock').checked && stockQty > 0;
+      const featured = document.getElementById('p-featured').checked;
+
+      const products = getStoredProducts();
+
+      if (editId) {
+        // Update
+        const idx = products.findIndex(p => p.id === editId);
+        if (idx !== -1) {
+          products[idx] = {
+            ...products[idx],
+            name, brand, category, price, oldPrice, sku, stockQty, image, description, inStock, featured
+          };
+          saveProducts(products);
+          showToast('تم تحديث المنتج بنجاح!', 'success');
+          setTimeout(() => { window.location.href = 'products.html'; }, 700);
+        }
+      } else {
+        // Create new
+        const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        const newProd = {
+          id: newId,
+          name,
+          nameEn: name,
+          brand,
+          category,
+          categoryId: 1,
+          price,
+          oldPrice,
+          sku: sku || `SKU-${newId}`,
+          inStock,
+          stockQty,
+          image,
+          images: [image],
+          rating: 5.0,
+          reviews: 1,
+          description,
+          descriptionEn: description,
+          specifications: { 'الضمان': 'سنتان' },
+          featured,
+          isNew: true,
+          dateAdded: new Date().toISOString().split('T')[0],
+        };
+        products.unshift(newProd);
+        saveProducts(products);
+        showToast('تمت إضافة المنتج الجديد بنجاح!', 'success');
+        setTimeout(() => { window.location.href = 'products.html'; }, 700);
+      }
+    }
+  </script>
+</body>
+</html>

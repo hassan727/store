@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إدارة المنتجات — إدارة VoltStore</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+</head>
+<body class="admin-body">
+
+  <div id="admin-sidebar-root"></div>
+
+  <div class="admin-main">
+    <div id="admin-header-root"></div>
+
+    <main class="admin-content" style="padding: 28px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+        <div style="display:flex; gap:12px; align-items:center; flex:1; max-width:500px;">
+          <input type="search" id="admin-product-search" class="form-control" placeholder="بحث بالاسم أو الماركة أو الرمز..." />
+          <select id="admin-product-category" class="form-control" style="width:180px;">
+            <option value="all">جميع الفئات</option>
+          </select>
+        </div>
+
+        <a href="product-edit.html" class="btn btn-primary">
+          ${icon('plus')} إضافة منتج جديد
+        </a>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="overflow-x:auto;">
+          <table class="orders-table" aria-label="جدول المنتجات">
+            <thead>
+              <tr>
+                <th style="width:70px;">الصورة</th>
+                <th>اسم المنتج</th>
+                <th>الماركة</th>
+                <th>الفئة</th>
+                <th>السعر</th>
+                <th>المخزون</th>
+                <th>الحالة</th>
+                <th style="text-align:center;">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="admin-products-tbody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminPage('products', 'إدارة المنتجات والكتالوج');
+      setupCategoryFilter();
+      renderProductsTable();
+
+      document.getElementById('admin-product-search').addEventListener('input', renderProductsTable);
+      document.getElementById('admin-product-category').addEventListener('change', renderProductsTable);
+    });
+
+    function setupCategoryFilter() {
+      const cats = getStoredCategories();
+      const select = document.getElementById('admin-product-category');
+      cats.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.slug;
+        opt.textContent = c.name;
+        select.appendChild(opt);
+      });
+    }
+
+    function renderProductsTable() {
+      const products = getStoredProducts();
+      const search = (document.getElementById('admin-product-search').value || '').trim().toLowerCase();
+      const cat = document.getElementById('admin-product-category').value;
+
+      let filtered = products;
+      if (search) {
+        filtered = filtered.filter(p => 
+          p.name.toLowerCase().includes(search) || 
+          p.brand.toLowerCase().includes(search) ||
+          (p.sku && p.sku.toLowerCase().includes(search))
+        );
+      }
+      if (cat && cat !== 'all') {
+        filtered = filtered.filter(p => p.category === cat);
+      }
+
+      const tbody = document.getElementById('admin-products-tbody');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">لا توجد منتجات مطابقة للبحث.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => `
+        <tr>
+          <td>
+            <img src="${p.image}" alt="${p.name}" style="width:48px; height:48px; object-fit:cover; border-radius:var(--radius-sm); border:1px solid var(--border);" />
+          </td>
+          <td>
+            <strong>${p.name}</strong>
+            ${p.sku ? `<div style="font-size:0.75rem; color:var(--text-muted);">رمز: ${p.sku}</div>` : ''}
+          </td>
+          <td>${p.brand}</td>
+          <td>${p.category}</td>
+          <td><strong>${formatPrice(p.price)}</strong></td>
+          <td>${p.stockQty !== undefined ? p.stockQty : (p.inStock ? 10 : 0)} قطعة</td>
+          <td>
+            <span class="badge ${p.inStock ? 'badge-success' : 'badge-error'}">
+              ${p.inStock ? 'متوفر' : 'غير متوفر'}
+            </span>
+          </td>
+          <td style="text-align:center;">
+            <div style="display:inline-flex; gap:8px;">
+              <a href="product-edit.html?id=${p.id}" class="btn btn-outline btn-sm" aria-label="تعديل ${p.name}">
+                ${icon('edit')} تعديل
+              </a>
+              <button class="btn btn-ghost btn-sm" style="color:var(--error);" onclick="deleteProduct(${p.id})" aria-label="حذف ${p.name}">
+                ${icon('trash')}
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteProduct(id) {
+      if (!confirm('هل أنت متأكد من رغبتك في حذف هذا المنتج من المتجر؟')) return;
+      const products = getStoredProducts().filter(p => p.id !== id);
+      saveProducts(products);
+      showToast('تم حذف المنتج بنجاح', 'default');
+      renderProductsTable();
+    }
+  </script>
+</body>
+</html>

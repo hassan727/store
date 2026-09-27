@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إدارة الفئات — إدارة VoltStore</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+</head>
+<body class="admin-body">
+
+  <div id="admin-sidebar-root"></div>
+
+  <div class="admin-main">
+    <div id="admin-header-root"></div>
+
+    <main class="admin-content" style="padding: 28px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+        <h3 style="margin:0; font-size:1.15rem;">فئات الأجهزة بالمتجر</h3>
+        <button class="btn btn-primary" onclick="openCategoryModal()">
+          ${icon('plus')} إضافة فئة جديدة
+        </button>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="overflow-x:auto;">
+          <table class="orders-table" aria-label="جدول الفئات">
+            <thead>
+              <tr>
+                <th style="width:60px;">#</th>
+                <th>اسم الفئة (عربي)</th>
+                <th>اسم الفئة (English)</th>
+                <th>الرابط التعريفي (Slug)</th>
+                <th>عدد المنتجات</th>
+                <th style="text-align:center;">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="categories-tbody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Category Modal -->
+  <div id="category-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-cat-title">إضافة فئة جديدة</h3>
+        <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
+      </div>
+      <form id="category-form">
+        <input type="hidden" id="cat-id" />
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="cat-name">اسم الفئة بالعربية <span style="color:var(--error)">*</span></label>
+          <input type="text" id="cat-name" class="form-control" required placeholder="مثال: أفران ومواقد" />
+        </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="cat-name-en">اسم الفئة بالإنجليزية</label>
+          <input type="text" id="cat-name-en" class="form-control" placeholder="Ovens & Cookers" dir="ltr" style="text-align:right;" />
+        </div>
+        <div class="form-group" style="margin-bottom:20px;">
+          <label for="cat-slug">الرابط التعريفي (Slug) <span style="color:var(--error)">*</span></label>
+          <input type="text" id="cat-slug" class="form-control" required placeholder="ovens-cookers" dir="ltr" style="text-align:right;" />
+          <small style="color:var(--text-muted); font-size:0.75rem;">يستخدم في روابط التصفية مثل products.html?cat=...</small>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeCategoryModal()">إلغاء</button>
+          <button type="submit" class="btn btn-primary">حفظ الفئة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminPage('categories', 'إدارة فئات المنتجات');
+      renderCategoriesTable();
+
+      document.getElementById('category-form').addEventListener('submit', handleSaveCategory);
+    });
+
+    function renderCategoriesTable() {
+      const cats = getStoredCategories();
+      const products = getStoredProducts();
+      const tbody = document.getElementById('categories-tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = cats.map(c => {
+        const prodCount = products.filter(p => p.category === c.slug).length;
+        return `
+          <tr>
+            <td><strong>${c.id}</strong></td>
+            <td><strong>${c.name}</strong></td>
+            <td dir="ltr" style="text-align:right;">${c.nameEn || '—'}</td>
+            <td><code>${c.slug}</code></td>
+            <td><span class="badge badge-info">${prodCount} منتجات</span></td>
+            <td style="text-align:center;">
+              <div style="display:inline-flex; gap:8px;">
+                <button class="btn btn-outline btn-sm" onclick="editCategory(${c.id})">
+                  ${icon('edit')} تعديل
+                </button>
+                <button class="btn btn-ghost btn-sm" style="color:var(--error);" onclick="deleteCategory(${c.id})">
+                  ${icon('trash')}
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openCategoryModal() {
+      document.getElementById('cat-id').value = '';
+      document.getElementById('cat-name').value = '';
+      document.getElementById('cat-name-en').value = '';
+      document.getElementById('cat-slug').value = '';
+      document.getElementById('modal-cat-title').textContent = 'إضافة فئة جديدة';
+      document.getElementById('category-modal').classList.remove('hidden');
+    }
+
+    function closeCategoryModal() {
+      document.getElementById('category-modal').classList.add('hidden');
+    }
+
+    function editCategory(id) {
+      const cats = getStoredCategories();
+      const cat = cats.find(c => c.id === id);
+      if (!cat) return;
+
+      document.getElementById('cat-id').value = cat.id;
+      document.getElementById('cat-name').value = cat.name;
+      document.getElementById('cat-name-en').value = cat.nameEn || '';
+      document.getElementById('cat-slug').value = cat.slug;
+      document.getElementById('modal-cat-title').textContent = `تعديل فئة: ${cat.name}`;
+      document.getElementById('category-modal').classList.remove('hidden');
+    }
+
+    function deleteCategory(id) {
+      if (!confirm('هل أنت متأكد من رغبتك في حذف هذه الفئة؟')) return;
+      const cats = getStoredCategories().filter(c => c.id !== id);
+      saveCategories(cats);
+      showToast('تم حذف الفئة بنجاح', 'default');
+      renderCategoriesTable();
+    }
+
+    function handleSaveCategory(e) {
+      e.preventDefault();
+      const idVal = document.getElementById('cat-id').value;
+      const name = document.getElementById('cat-name').value.trim();
+      const nameEn = document.getElementById('cat-name-en').value.trim();
+      const slug = document.getElementById('cat-slug').value.trim().toLowerCase().replace(/\s+/g, '-');
+
+      const cats = getStoredCategories();
+
+      if (idVal) {
+        const id = parseInt(idVal, 10);
+        const idx = cats.findIndex(c => c.id === id);
+        if (idx !== -1) {
+          cats[idx] = { ...cats[idx], name, nameEn, slug };
+          saveCategories(cats);
+          showToast('تم تحديث بيانات الفئة بنجاح', 'success');
+        }
+      } else {
+        const newId = cats.length > 0 ? Math.max(...cats.map(c => c.id)) + 1 : 1;
+        cats.push({ id: newId, name, nameEn, slug, icon: 'category' });
+        saveCategories(cats);
+        showToast('تمت إضافة الفئة الجديدة بنجاح', 'success');
+      }
+
+      closeCategoryModal();
+      renderCategoriesTable();
+    }
+  </script>
+</body>
+</html>
